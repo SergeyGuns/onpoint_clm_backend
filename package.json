@@ -1,0 +1,23 @@
+{
+  "name": "onpoint_clm_backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "graphql": "^14.0.2",
+    "graphql-date": "^1.0.3",
+    "graphql-tools": "^4.0.3",
+    "path": "^0.12.7",
+    "sequelize": "^4.42.0",
+    "sqlite3": "^4.0.4"
+  }
+}
