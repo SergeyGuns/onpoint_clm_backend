@@ -7,23 +7,30 @@ module.exports = (`
     login: String!
     password: Int!
     name: String!
+    contentGroups: [ContentGroup]
   }
 
-  input user_input {
-    login: String!
-    password: Int!
+  type ContentGroup {
+    id: ID!
     name: String!
-}
+    users: [User]
+  }
 
   type Query {
     user(id: ID!): User
     users: [User]
+    contentGroup(id: ID!): ContentGroup
+    contentGroups: [ContentGroup]
   }
 
   type Mutation {
-    createUser(input: user_input!): User
-    updateUser(id: ID!, input: user_input!): User
+    createUser(name: String!, login: String!, password: String!): User
+    updateUser(id: ID!, name: String, login: String, password: String): User
     removeUser(id: ID!): User
+    createContentGroup(name: String!, usersId: [ID]): ContentGroup
+    updateContentGroup(id: ID!, name: String!, usersId: [ID]): ContentGroup
+    removeContentGroup(id: ID!): ContentGroup
+    addUsersInContentGroup(usersId: [ID!], contentGroupId: ID!): ContentGroup
   }
 
   schema {

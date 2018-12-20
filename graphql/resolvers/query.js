@@ -7,4 +7,10 @@ module.exports = {
   users (root, args, context) {
     return models.User.findAll({}, context);
   },
+  contentGroup(root, { id }) {
+    return models.ContentGroup.findById(id);
+  },
+  contentGroups (root, args, context) {
+    return models.ContentGroup.findAll({}, context);
+  },
 };

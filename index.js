@@ -11,6 +11,6 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/graphql', graphqlRoutes);
-app.use('/', (req, res) => { res.send('Best frontend willbe here') });
+app.get('/', (req, res) => { res.send('Best frontend willbe here') });
 
 app.listen(port, () => console.log('Express app listening on localhost:' + port));

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const scheme = require('./scheme');
+const models = require('./models');
 
 //const Op = Sequelize.Op;
 
@@ -11,7 +11,7 @@ const sequelize = new Sequelize('demo_name', 'root', 'passwor', {
   logging: false
 });
 
-scheme(sequelize);
+models(sequelize);
 sequelize.sync();
 
 module.exports.sequelize = sequelize;
