@@ -1,4 +1,4 @@
-const { models } = require("../../models");
+const { models } = require('../../models');
 
 module.exports = {
   createUser(root, input, context) {
@@ -28,6 +28,7 @@ module.exports = {
   removeContentGroup(root, { id }, context) {
     return models.ContentGroup.findById(id).then(group => group.destroy());
   },
+
   addUsersInContentGroup(root, { usersId, contentGroupId }, context) {
     return models.ContentGroup.findById(contentGroupId).then(group => {
       return models.User.findAll({ where: { id: usersId } }).then(users => {
@@ -35,5 +36,9 @@ module.exports = {
         return group;
       });
     });
-  }
+  },
+
+  createPresentation(root, input, context) {
+    return models.Presentation.create(input);
+  },
 };

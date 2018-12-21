@@ -10,6 +10,11 @@ module.exports = `
     contentGroups: [ContentGroup]
   }
 
+  type Presentation {
+    id: ID!
+    name: String!
+  }
+
   type ContentGroup {
     id: ID!
     name: String!
@@ -21,6 +26,7 @@ module.exports = `
     users: [User]
     contentGroup(id: ID!): ContentGroup
     contentGroups: [ContentGroup]
+    getAllPresentations: [Presentation]
   }
 
   type Mutation {
@@ -31,6 +37,7 @@ module.exports = `
     updateContentGroup(id: ID!, name: String!, usersId: [ID]): ContentGroup
     removeContentGroup(id: ID!): ContentGroup
     addUsersInContentGroup(usersId: [ID!], contentGroupId: ID!): ContentGroup
+    createPresentation(name: String!): Presentation
   }
 
   schema {

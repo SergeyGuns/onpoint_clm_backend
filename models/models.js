@@ -13,16 +13,22 @@ module.exports = function(sequelize) {
     name: Sequelize.STRING
   });
 
+  const Presentation = sequelize.define("Presentation", {
+    id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+    name: Sequelize.STRING
+  });
+
   User.belongsToMany(ContentGroup, {
     as: "Groups",
     through: "usersGroups",
     foreignKey: "userId"
   });
+
   ContentGroup.belongsToMany(User, {
     as: "Users",
     through: "usersGroups",
     foreignKey: "groupId"
   });
 
-  return { User, ContentGroup };
+  return { User, ContentGroup, Presentation };
 };
