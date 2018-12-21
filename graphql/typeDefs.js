@@ -1,11 +1,11 @@
-module.exports = (`
+module.exports = `
 
   scalar Date
 
   type User {
     id: ID!
     login: String!
-    password: Int!
+    password: String!
     name: String!
     contentGroups: [ContentGroup]
   }
@@ -38,4 +38,4 @@ module.exports = (`
     mutation: Mutation
   }
 
-  `)
+  `;
