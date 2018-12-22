@@ -1,4 +1,31 @@
 const { models } = require('../../models');
+const generateId = require('shortid').generate;
+
+const storeUpload = async ({ stream, filename }) => {
+  const uploadDir = './uploads';
+  const id = generateId();
+  const path = `${uploadDir}/${id}-${filename}`;
+
+  return new Promise((resolve, reject) =>
+    stream
+      .pipe(createWriteStream(path))
+      .on('finish', () => resolve({ id, path }))
+      .on('error', reject),
+  );
+};
+
+const recordFile = file =>
+  db
+    .get('uploads')
+    .push(file)
+    .last()
+    .write();
+
+const processUpload = async upload => {
+  const { stream, filename, mimetype, encoding } = await upload;
+  const { id, path } = await storeUpload({ stream, filename });
+  return recordFile({ id, filename, mimetype, encoding, path });
+};
 
 module.exports = {
   createUser(root, input, context) {
@@ -41,4 +68,6 @@ module.exports = {
   createPresentation(root, input, context) {
     return models.Presentation.create(input);
   },
+  singleUpload: (obj, { file }) => processUpload(file),
+  multipleUpload: (obj, { files }) => Promise.all(files.map(processUpload)),
 };

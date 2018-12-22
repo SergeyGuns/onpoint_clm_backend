@@ -1,6 +1,7 @@
 module.exports = `
 
   scalar Date
+  scalar Upload
 
   type User {
     id: ID!
@@ -9,6 +10,15 @@ module.exports = `
     name: String!
     contentGroups: [ContentGroup]
   }
+
+  type File {
+    id: ID!
+    path: String!
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+
 
   type Presentation {
     id: ID!
@@ -26,7 +36,8 @@ module.exports = `
     users: [User]
     contentGroup(id: ID!): ContentGroup
     contentGroups: [ContentGroup]
-    getAllPresentations: [Presentation]
+    presentations: [Presentation]
+    uploads: [File]
   }
 
   type Mutation {
@@ -38,6 +49,8 @@ module.exports = `
     removeContentGroup(id: ID!): ContentGroup
     addUsersInContentGroup(usersId: [ID!], contentGroupId: ID!): ContentGroup
     createPresentation(name: String!): Presentation
+    singleUpload (file: Upload!): File!
+    multipleUpload (files: [Upload!]!): [File!]!
   }
 
   schema {

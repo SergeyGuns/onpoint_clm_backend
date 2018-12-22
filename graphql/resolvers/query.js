@@ -13,7 +13,8 @@ module.exports = {
   contentGroups(root, args, context) {
     return models.ContentGroup.findAll({}, context);
   },
-  getAllPresentations(root, args, context) {
+  presentations(root, args, context) {
     return models.Presentation.findAll({}, context);
   },
+  uploads: () => db.get('uploads').value(),
 };
