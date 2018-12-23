@@ -1,5 +1,6 @@
 const { models } = require('../../models');
 const generateId = require('shortid').generate;
+const { createWriteStream } = require('fs');
 
 const storeUpload = async ({ stream, filename }) => {
   const uploadDir = './uploads';
@@ -14,17 +15,13 @@ const storeUpload = async ({ stream, filename }) => {
   );
 };
 
-const recordFile = file =>
-  db
-    .get('uploads')
-    .push(file)
-    .last()
-    .write();
+const recordFile = (obj, file, context) => models.File.create(file);
 
-const processUpload = async upload => {
+const processUpload = async (upload, context) => {
   const { stream, filename, mimetype, encoding } = await upload;
+  console.dir(upload);
   const { id, path } = await storeUpload({ stream, filename });
-  return recordFile({ id, filename, mimetype, encoding, path });
+  return recordFile(null, { id, filename, mimetype, encoding, path }, context);
 };
 
 module.exports = {
@@ -68,6 +65,9 @@ module.exports = {
   createPresentation(root, input, context) {
     return models.Presentation.create(input);
   },
-  singleUpload: (obj, { file }) => processUpload(file),
+  singleUpload: (obj, { file }, context) => {
+    console.log(file);
+    return processUpload(file, context);
+  },
   multipleUpload: (obj, { files }) => Promise.all(files.map(processUpload)),
 };

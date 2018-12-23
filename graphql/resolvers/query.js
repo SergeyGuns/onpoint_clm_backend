@@ -16,5 +16,5 @@ module.exports = {
   presentations(root, args, context) {
     return models.Presentation.findAll({}, context);
   },
-  uploads: () => db.get('uploads').value(),
+  uploads: (root, args, context) => models.File.findAll({}, context),
 };
