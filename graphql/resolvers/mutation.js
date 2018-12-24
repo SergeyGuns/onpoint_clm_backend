@@ -1,4 +1,28 @@
-const { models } = require("../../models");
+const { models } = require('../../models');
+const generateId = require('shortid').generate;
+const { createWriteStream } = require('fs');
+
+const storeUpload = async ({ stream, filename }) => {
+  const uploadDir = './uploads';
+  const id = generateId();
+  const path = `${uploadDir}/${id}-${filename}`;
+
+  return new Promise((resolve, reject) =>
+    stream
+      .pipe(createWriteStream(path))
+      .on('finish', () => resolve({ id, path }))
+      .on('error', reject),
+  );
+};
+
+const recordFile = (obj, file, context) => models.File.create(file);
+
+const processUpload = async (upload, context) => {
+  const { stream, filename, mimetype, encoding } = await upload;
+  console.dir(upload);
+  const { id, path } = await storeUpload({ stream, filename });
+  return recordFile(null, { id, filename, mimetype, encoding, path }, context);
+};
 
 module.exports = {
   createUser(root, input, context) {
@@ -28,6 +52,7 @@ module.exports = {
   removeContentGroup(root, { id }, context) {
     return models.ContentGroup.findById(id).then(group => group.destroy());
   },
+
   addUsersInContentGroup(root, { usersId, contentGroupId }, context) {
     return models.ContentGroup.findById(contentGroupId).then(group => {
       return models.User.findAll({ where: { id: usersId } }).then(users => {
@@ -35,5 +60,14 @@ module.exports = {
         return group;
       });
     });
-  }
+  },
+
+  createPresentation(root, input, context) {
+    return models.Presentation.create(input);
+  },
+  singleUpload: (obj, { file }, context) => {
+    console.log(file);
+    return processUpload(file, context);
+  },
+  multipleUpload: (obj, { files }) => Promise.all(files.map(processUpload)),
 };
