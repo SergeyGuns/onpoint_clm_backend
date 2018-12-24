@@ -1,27 +1,33 @@
 const { models } = require('../../models');
-const generateId = require('shortid').generate;
 const { createWriteStream } = require('fs');
+const uploadDir = './uploads';
+const generateHash = () => Date.now() + '_hash';
 
 const storeUpload = async ({ stream, filename }) => {
-  const uploadDir = './uploads';
-  const id = generateId();
-  const path = `${uploadDir}/${id}-${filename}`;
-
+  const hash = generateHash();
+  const path = `${uploadDir}/${hash}-${filename}`;
   return new Promise((resolve, reject) =>
     stream
       .pipe(createWriteStream(path))
-      .on('finish', () => resolve({ id, path }))
+      .on('finish', () => resolve({ hash, path }))
       .on('error', reject),
   );
 };
 
-const recordFile = (obj, file, context) => models.File.create(file);
+const recordFile = (root, file, context) => {
+  models.File.create(file);
+};
 
-const processUpload = async (upload, context) => {
+const processUpload = async (root, upload, context) => {
   const { stream, filename, mimetype, encoding } = await upload;
-  console.dir(upload);
-  const { id, path } = await storeUpload({ stream, filename });
-  return recordFile(null, { id, filename, mimetype, encoding, path }, context);
+  const { hash, path } = await storeUpload({ stream, filename });
+  console.dir({ hash, filename, mimetype, encoding, path });
+
+  return recordFile(
+    root,
+    { hash, filename, mimetype, encoding, path },
+    context,
+  );
 };
 
 module.exports = {
@@ -65,9 +71,11 @@ module.exports = {
   createPresentation(root, input, context) {
     return models.Presentation.create(input);
   },
-  singleUpload: (obj, { file }, context) => {
+
+  singleUpload: (root, { file }, context) => {
     console.log(file);
-    return processUpload(file, context);
+    return processUpload(root, file, context);
   },
-  multipleUpload: (obj, { files }) => Promise.all(files.map(processUpload)),
+
+  multipleUpload: (root, { files }) => Promise.all(files.map(processUpload)),
 };

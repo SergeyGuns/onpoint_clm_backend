@@ -1,4 +1,5 @@
 const GraphQLDate = require('graphql-date');
+//const GraphQLUpload = require('graphql-upload');
 
 const query = require('./query');
 const mutation = require('./mutation');
@@ -12,5 +13,6 @@ module.exports = function resolvers() {
     User: user,
     ContentGroup: content_group,
     Date: GraphQLDate,
+    //Upload: GraphQLUpload,
   };
 };
