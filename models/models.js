@@ -10,6 +10,7 @@ module.exports = function(sequelize) {
 
   const File = sequelize.define('File', {
     id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+    hash: Sequelize.STRING,
     path: Sequelize.STRING,
     filename: Sequelize.STRING,
     mimetype: Sequelize.STRING,

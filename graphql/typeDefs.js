@@ -13,6 +13,7 @@ module.exports = `
 
   type File {
     id: ID!
+    hash: String!
     path: String!
     filename: String!
     mimetype: String!
