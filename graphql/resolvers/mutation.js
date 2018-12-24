@@ -1,6 +1,7 @@
 const { models } = require('../../models');
 const { createWriteStream } = require('fs');
 const uploadDir = './uploads';
+
 const generateHash = () => Date.now() + '_hash';
 
 const storeUpload = async ({ stream, filename }) => {
@@ -14,12 +15,11 @@ const storeUpload = async ({ stream, filename }) => {
   );
 };
 
-const recordFile = (root, file, context) => {
-  models.File.create(file);
-};
+const recordFile = (root, file, context) => models.File.create(file);
 
 const processUpload = async (root, upload, context) => {
-  const { stream, filename, mimetype, encoding } = await upload;
+  const { createReadStream, filename, mimetype, encoding } = await upload;
+  const stream = createReadStream();
   const { hash, path } = await storeUpload({ stream, filename });
   console.dir({ hash, filename, mimetype, encoding, path });
 
